@@ -107,7 +107,7 @@ def processVCard(vCardObject, writeDB, outFile, lines, verbose):
             if name and num:
                 if writeDB:
                     print("Adding/updating Number: %s Name: %s ..." % (num, name))
-                elif outFile:
+                if outFile:
                     line = '"%s";%s;' % (name, num)
                     print("Appending to file: %s" % line)
                     lines.append(line)
@@ -143,21 +143,34 @@ def readVcard(inFile, writeDB, outFile, verbose):
     if outFile and lines:
         fileName = "%s-%s.csv" % (outFile, time.strftime("%Y%m%d-%H%M%S"))
         f = open(fileName, "w")
-        print("Writing to file...")
+        print("\n----------\nWriting to file...")
         
         for line in lines:
             f.write(line + "\n")
         f.close()
         
     if writeDB and lines:
-        # connect to asterisk
+        print("\n----------\nWriting to asterisk database...")
+        
         ami = Manager(host = config['ami']['host'],
             port = config['ami']['port'],
             username = config['ami']['user'],
             secret = config['ami']['pass'])
-        yield from ami.connect()
+        ami.connect()
+        for line in lines:
+            lineSplit = line.split(';')
+            name = lineSplit[0].replace("'", "").replace("[", "").replace("]", "")
+            num = lineSplit[1]
+            if verbose:
+                print("Name: %s \t Number: %s" % (name, num))      
+            ami_result = ami.send_action({"Action": "DBPut", "Family": "cidname", "Key": num, "Val": name})
+            print(ami_result.Response)
+        
+        ami.close()
         
     if outFile:
         print("\n----------\nWrote %s entries to %s" % (noOfCards, fileName))
+    elif writeDB:
+        print("\n----------\nAdded/updated %s entries to asterisk phonebook" % noOfCards)
     else:
-        print("\n----------\nNo of vcards: %s" % noOfCards)
+        print("\n----------\nNo of vcards: " % noOfCards)
