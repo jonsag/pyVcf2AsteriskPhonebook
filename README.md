@@ -16,7 +16,9 @@ Install python modules
 
     # pip3 install lxml panoramisk vobject  
 
-### Configuration
+### Asterisk configuration
+
+#### Alternative 1: Edit files
 
 Edit manager.conf  
 
@@ -43,7 +45,21 @@ or
 
     # asterisk -r
 
-    raspbx*CLI> core restart now  
+    raspbx*CLI> core restart now
+
+#### Alternative 2: Use web UI
+
+Use the FreePBX web console to add the user vcardimport.  
+
+This will make an entry in /etc/asterisk/manager_additional.conf, like  
+
+>[vcardimport]  
+>secret = YourSecretPassword  
+>deny=0.0.0.0/0.0.0.0  
+>permit=127.0.0.1/255.255.255.0  
+>read = system,call,log,verbose,command,agent,user,config,dtmf,reporting,cdr,dialplan,originate  
+>write = system,call,log,verbose,command,agent,user,config,dtmf,reporting,cdr,dialplan,originate  
+>writetimeout = 100  
 
 ### Install software
 
@@ -59,4 +75,3 @@ Copy config
 Edit config.ini entering your own variables  
 
     # emacs config.ini  
-
