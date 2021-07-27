@@ -114,21 +114,19 @@ def processVCard(vCardObject, writeDB, outFile, lines, verbose):
     
     return(lines)
         
-def writeToDB(lines, verbose):
+async def writeToDB(ami, lines, verbose):
     print("\n----------\nWriting to asterisk database...")
-    ami = Manager(host = config['ami']['host'],
-            port = config['ami']['port'],
-            username = config['ami']['user'],
-            secret = config['ami']['pass'])
+    
     await ami.connect()
     for line in lines:
         lineSplit = line.split(';')
         name = lineSplit[0].replace("'", "").replace("[", "").replace("]", "")
         num = lineSplit[1]
         if verbose:
-            print("Name: %s \t Number: %s" % (name, num))      
+            print("Adding name: %s \t Number: %s" % (name, num))      
         ami_result = await ami.send_action({"Action": "DBPut", "Family": "cidname", "Key": num, "Val": name})
-        print(ami_result.Response)
+        if verbose:
+            print(ami_result.Response)
     
     ami.close()
                 
@@ -168,8 +166,13 @@ def readVcard(inFile, writeDB, outFile, verbose):
         f.close()
         
     if writeDB and lines:
+        ami = Manager(loop=asyncio.get_event_loop(), 
+                    host = config['ami']['host'],
+                    port = config['ami']['port'],
+                    username = config['ami']['user'],
+                    secret = config['ami']['pass'])
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(writeToDB(lines, verbose))
+        loop.run_until_complete(writeToDB(ami, lines, verbose))
         loop.close()
         
         
