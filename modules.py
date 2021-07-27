@@ -105,12 +105,12 @@ def processVCard(vCardObject, writeDB, outFile, lines, verbose):
                 name = vCardObject.org.value
                     
             if name and num:
+                line = '"%s";%s;' % (name, num)
+                lines.append(line)
                 if writeDB:
                     print("Adding/updating Number: %s Name: %s ..." % (num, name))
                 if outFile:
-                    line = '"%s";%s;' % (name, num)
                     print("Appending to file: %s" % line)
-                    lines.append(line)
     
     return(lines)
                 
