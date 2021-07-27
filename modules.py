@@ -4,11 +4,10 @@
 
 import configparser, json, os, re, sys, time, vobject
 
+from panoramisk import Manager
+
 config = configparser.ConfigParser()  # define config file
 config.read("%s/config.ini" % os.path.dirname(os.path.realpath(__file__)))  # read config file
-
-# read variables from config file
-var = config.get('header', 'var').strip()
 
 # handle errors
 def onError(errorCode, extra):
@@ -37,7 +36,7 @@ def usage(exitCode):
     
     print("\n%s -i <path to vCard file> -o <output file>" % sys.argv[0])
     print("    Open file and create a new file with lines like:")
-    print('        "Name";number;number...')
+    print('        "Name";Number;')
     
     print("\n%s -v" % sys.argv[0])
     print("    Verbose output")
@@ -149,6 +148,14 @@ def readVcard(inFile, writeDB, outFile, verbose):
         for line in lines:
             f.write(line + "\n")
         f.close()
+        
+    if writeDB and lines:
+        # connect to asterisk
+        ami = Manager(host = config['ami']['host'],
+            port = config['ami']['port'],
+            username = config['ami']['user'],
+            secret = config['ami']['pass'])
+        yield from ami.connect()
         
     if outFile:
         print("\n----------\nWrote %s entries to %s" % (noOfCards, fileName))

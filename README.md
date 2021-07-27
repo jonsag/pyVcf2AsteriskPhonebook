@@ -4,13 +4,17 @@ Convert a google contacts vcf export to a csv in the format: "name";phone number
 
 ## RasPBX
 
-### Installation
+### Install prerequisites
 
 Connect via ssh  
 
     # apt install git python3-pip  
 
     # apt install emacs #(optional)  
+
+Install python modules  
+
+    # pip3 install panoramisk vobject  
 
 ### Configuration
 
@@ -36,4 +40,19 @@ Restart asterisk
     # asterisk -r
 
     raspbx*CLI> core restart now  
+
+### Install software
+
+Download sources  
+
+    # git clone https://github.com/jonsag/pyVcf2AsteriskPhonebook  
+    # cd pyVcf2AsteriskPhonebook  
+
+Copy config  
+
+    # cp cp config.ini.example config.ini  
+
+Edit config.ini entering your own variables  
+
+    # emacs config.ini  
 
