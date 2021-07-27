@@ -1,5 +1,5 @@
 [ami]
-user = carddavimport
+user = vcardimport
 pass = YourSecretPassword
 host = localhost
 port = 5038

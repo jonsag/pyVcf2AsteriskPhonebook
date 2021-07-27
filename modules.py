@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Encoding: UTF-8
 
-import configparser, json, os, re, sys, time, vobject
+import asyncio, configparser, json, os, re, sys, time, vobject
 
 from panoramisk import Manager
 
@@ -113,6 +113,24 @@ def processVCard(vCardObject, writeDB, outFile, lines, verbose):
                     print("Appending to file: %s" % line)
     
     return(lines)
+        
+def writeToDB(lines, verbose):
+    print("\n----------\nWriting to asterisk database...")
+    ami = Manager(host = config['ami']['host'],
+            port = config['ami']['port'],
+            username = config['ami']['user'],
+            secret = config['ami']['pass'])
+    await ami.connect()
+    for line in lines:
+        lineSplit = line.split(';')
+        name = lineSplit[0].replace("'", "").replace("[", "").replace("]", "")
+        num = lineSplit[1]
+        if verbose:
+            print("Name: %s \t Number: %s" % (name, num))      
+        ami_result = await ami.send_action({"Action": "DBPut", "Family": "cidname", "Key": num, "Val": name})
+        print(ami_result.Response)
+    
+    ami.close()
                 
 def readVcard(inFile, writeDB, outFile, verbose):
     print("Processing...")
@@ -150,23 +168,12 @@ def readVcard(inFile, writeDB, outFile, verbose):
         f.close()
         
     if writeDB and lines:
-        print("\n----------\nWriting to asterisk database...")
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(writeToDB(lines, verbose))
+        loop.close()
         
-        ami = Manager(host = config['ami']['host'],
-            port = config['ami']['port'],
-            username = config['ami']['user'],
-            secret = config['ami']['pass'])
-        ami.connect()
-        for line in lines:
-            lineSplit = line.split(';')
-            name = lineSplit[0].replace("'", "").replace("[", "").replace("]", "")
-            num = lineSplit[1]
-            if verbose:
-                print("Name: %s \t Number: %s" % (name, num))      
-            ami_result = ami.send_action({"Action": "DBPut", "Family": "cidname", "Key": num, "Val": name})
-            print(ami_result.Response)
         
-        ami.close()
+        
         
     if outFile:
         print("\n----------\nWrote %s entries to %s" % (noOfCards, fileName))

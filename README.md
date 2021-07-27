@@ -14,7 +14,7 @@ Connect via ssh
 
 Install python modules  
 
-    # pip3 install panoramisk vobject  
+    # pip3 install lxml panoramisk vobject  
 
 ### Configuration
 
@@ -30,12 +30,16 @@ Create new file
 
     # emacs /etc/asterisk/manager_custom.conf
 
->[carddavimport]  
+>[vcardimport]  
 > secret = YourSecretPassword  
 > permit = 127.0.0.1/255.255.255.0  
 > write = system  
 
 Restart asterisk  
+
+    # rasterisk -x 'manager reload'  
+
+or  
 
     # asterisk -r
 
