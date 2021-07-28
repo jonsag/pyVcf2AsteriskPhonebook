@@ -19,7 +19,33 @@ Install python modules
 
 ### Asterisk configuration
 
-#### Alternative 1: Edit files
+#### Alternative 1: Use FreePBX web UI (preferred)
+
+Use the FreePBX web UI to add the user vcardimport.  
+
+* Open your FreePBX Adminstration's web UI  
+* Click 'Settings'-> 'Asterisk Manager Users'  
+![Open AM users](images/11.click_settings_and_select_asterisk_manager_users.jpg)
+* Click 'Add Manager'  
+  ![Add manager](images/12.click_add_manager.jpg)
+* Enter 'Manager name' (user name) and 'Manager secret' (password)  
+![Enter name pass](images/13.enter_user_name_and_secret_password.jpg)
+* Click 'Submit'  
+![Submit](images/14.click_submit.jpg)
+* Click 'Apply config'  
+![Apply](images/15.click_apply_config.jpg)
+
+This will make an entry in /etc/asterisk/manager_additional.conf:  
+
+>[vcardimport]  
+>secret = YourSecretPassword  
+>deny=0.0.0.0/0.0.0.0  
+>permit=127.0.0.1/255.255.255.0  
+>read = system,call,log,verbose,command,agent,user,config,dtmf,reporting,cdr,dialplan,originate  
+>write = system,call,log,verbose,command,agent,user,config,dtmf,reporting,cdr,dialplan,originate  
+>writetimeout = 100  
+
+#### Alternative 2: Edit asterisk conf file
 
 Edit manager.conf  
 
@@ -46,33 +72,7 @@ or
 
     # asterisk -r
 
-    raspbx*CLI> core restart now
-
-#### Alternative 2: Use web UI (preferred)
-
-Use the FreePBX web UI to add the user vcardimport.  
-
-* Open your FreePBX Adminstration's web UI  
-* Click 'Settings'-> 'Asterisk Manager Users'  
-![Open AM users](images/11.click_settings_and_select_asterisk_manager_users.jpg)
-* Click 'Add Manager'  
-  ![Add manager](images/12.click_add_manager.jpg)
-* Enter 'Manager name' (user name) and 'Manager secret' (password)  
-![Enter name pass](images/13.enter_user_name_and_secret_password.jpg)
-* Click 'Submit'  
-![Submit](images/14.click_submit.jpg)
-* Click 'Apply config'  
-![Apply](images/15.click_apply_config.jpg)
-
-This will make an entry in /etc/asterisk/manager_additional.conf:  
-
->[vcardimport]  
->secret = YourSecretPassword  
->deny=0.0.0.0/0.0.0.0  
->permit=127.0.0.1/255.255.255.0  
->read = system,call,log,verbose,command,agent,user,config,dtmf,reporting,cdr,dialplan,originate  
->write = system,call,log,verbose,command,agent,user,config,dtmf,reporting,cdr,dialplan,originate  
->writetimeout = 100  
+    raspbx*CLI> core restart now  
 
 ### Install software
 
@@ -102,11 +102,11 @@ Edit config.ini entering your own data and variables.
 
 ## Usage
 
-### Update asterisk phonebook directly (preferred)
+### Alternative 1: Update asterisk phonebook directly (preferred)
 
     # ./pyVcf2AsteriskPhonebook.py -i <path to your .vcf file> -w  
 
-### Create a .csv file, and manually upload it to FreePBX
+### Alternative 2: Create a .csv file, and manually upload it to FreePBX
 
     # ./pyVcf2AsteriskPhonebook.py -i <path to your .vcf file> -o <file name>  
 
