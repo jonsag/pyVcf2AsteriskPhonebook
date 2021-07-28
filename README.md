@@ -3,7 +3,7 @@
 Import Google contacts, or any vCard file, to Asterisk Phonebook.  
 Either directly using the Asterisk Management Interface, or export the vCard file to a .csv and import that through FreePBX web UI.  
 
-## RasPBX
+## FreePBX/RasPBX
 
 ### Install prerequisites
 
