@@ -51,7 +51,7 @@ else:
      if not "BEGIN:VCARD" in firstLine:
          onError(6, "This is not a vcard file")
 
-if writeDB and outfile:
+if writeDB and outFile:
     onError(7, "Choose ONE of -w (--write) and -o (--outfile")
          
 readVcard(inFile, writeDB, outFile, verbose)
