@@ -136,8 +136,12 @@ async def writeToDB(lines, verbose):
         ami_result = await ami.send_action({"Action": "DBPut", "Family": "cidname", "Key": num, "Val": name})
         if verbose:
             print(ami_result.Response)
+        else:
+            print(".", end='')
     
     ami.close()
+    if not verbose:
+        print()
                 
 def readVcard(inFile, writeDB, outFile, verbose):
     print("Processing...")
