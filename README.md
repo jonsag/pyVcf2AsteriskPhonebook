@@ -1,6 +1,7 @@
 # pyVcf2AsteriskPhonebook
 
-Convert a google contacts vcf export to a csv in the format: "name";phone number; phone number
+Import Google contacts, or any vCard file, to Asterisk Phonebook.  
+Either export directly using the Asterisk Management Interface, or export the vCard file to a .csv and import that through FreePBX web UI.  
 
 ## RasPBX
 
@@ -49,7 +50,7 @@ or
 
 #### Alternative 2: Use web UI (preferred)
 
-Use the FreePBX web console to add the user vcardimport.  
+Use the FreePBX web UI to add the user vcardimport.  
 
 * Open your FreePBX Adminstration's web UI  
 * Click 'Settings'-> 'Asterisk Manager Users'  
@@ -63,7 +64,7 @@ Use the FreePBX web console to add the user vcardimport.
 * Click 'Apply config'  
 ![Apply](images/15.click_apply_config.jpg)
 
-This will make an entry in /etc/asterisk/manager_additional.conf, like  
+This will make an entry in /etc/asterisk/manager_additional.conf:  
 
 >[vcardimport]  
 >secret = YourSecretPassword  
@@ -84,11 +85,11 @@ Copy config
 
     # cp cp config.ini.example config.ini  
 
-Edit config.ini entering your own variables  
+Edit config.ini entering your own data and variables.  
 
     # emacs config.ini  
 
-## Export google contacts
+## Export Google contacts
 
 * Open [Google contacts](http://contacts.google.com)  
 * Mark one item  
@@ -103,7 +104,7 @@ Edit config.ini entering your own variables
 
 ### Update asterisk phonebook directly (preferred)
 
-    # ./pyVcf2AsteriskPhonebook.py -i <path to your .vcf file> -w
+    # ./pyVcf2AsteriskPhonebook.py -i <path to your .vcf file> -w  
 
 ### Create a .csv file, and manually upload it to FreePBX
 
