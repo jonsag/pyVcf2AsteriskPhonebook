@@ -15,7 +15,7 @@ def onError(errorCode, extra):
     if errorCode in(1, 2): # print error information, print usage and exit
         print(extra)
         usage(errorCode)
-    elif errorCode in (3, 5, 6): # print error information and exit
+    elif errorCode in (3, 5, 7): # print error information and exit
         print(extra)
         sys.exit(errorCode)
     elif errorCode == 4: # print error information and return running program
@@ -105,11 +105,14 @@ def processVCard(vCardObject, writeDB, outFile, lines, verbose):
                 name = vCardObject.org.value
                     
             if name and num:
-                line = '"%s";%s;' % (name, num)
-                lines.append(line)
+                
                 if writeDB:
+                    line = '%s;%s;' % (name, num)
+                    lines.append(line)
                     print("Adding/updating Number: %s Name: %s ..." % (num, name))
                 if outFile:
+                    line = '"%s";%s;' % (name, num)
+                    lines.append(line)
                     print("Appending to file: %s" % line)
     
     return(lines)

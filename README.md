@@ -47,9 +47,21 @@ or
 
     raspbx*CLI> core restart now
 
-#### Alternative 2: Use web UI
+#### Alternative 2: Use web UI (preferred)
 
 Use the FreePBX web console to add the user vcardimport.  
+
+* Open your FreePBX Adminstration's web UI  
+* Click 'Settings'-> 'Asterisk Manager Users'  
+![Open AM users](images/11.click_settings_and_select_asterisk_manager_users.jpg)
+* Click 'Add Manager'  
+  ![Add manager](images/12.click_add_manager.jpg)
+* Enter 'Manager name' (user name) and 'Manager secret' (password)  
+![Enter name pass](images/13.enter_user_name_and_secret_password.jpg)
+* Click 'Submit'  
+![Submit](images/14.click_submit.jpg)
+* Click 'Apply config'  
+![Apply](images/15.click_apply_config.jpg)
 
 This will make an entry in /etc/asterisk/manager_additional.conf, like  
 
@@ -75,3 +87,36 @@ Copy config
 Edit config.ini entering your own variables  
 
     # emacs config.ini  
+
+## Export google contacts
+
+* Open [Google contacts](http://contacts.google.com)  
+* Mark one item  
+![Mark item](images/01.mark_one_item.png)  
+* Click the three dots and click 'Export'  
+![Click export](images/02.click_three_dots_and_select_export.png)  
+* Mark 'Contacts' and 'vCard' and click 'Export'  
+![Mark](images/03.mark_contacts_and_vcard_and_click_export.png)  
+* Save your vCards file  
+
+## Usage
+
+### Update asterisk phonebook directly (preferred)
+
+    # ./pyVcf2AsteriskPhonebook.py -i <path to your .vcf file> -w
+
+### Create a .csv file, and manually upload it to FreePBX
+
+    # ./pyVcf2AsteriskPhonebook.py -i <path to your .vcf file> -o <file name>  
+
+This will create a .csv file, with the name you entered, followed by a timestamp and .csv.  
+
+* Open your FreePBX Adminstration's web UI  
+* Click 'Admin'->'Asterisk Phonebook'  
+![open Asterisk Phonebook](images/21.click_admin_asterisk_phonebook.jpg)
+* Click 'Import Phonebook'  
+![Import phonebook](images/22.click_import_phonebook.jpg)
+* Click 'Browse' and select your .csv the python script created  
+![Browse](images/23.click_browse_and_select_your_csv_file.jpg)
+* Click 'Upload'  
+![Upload](images/24.click_upload.jpg)
