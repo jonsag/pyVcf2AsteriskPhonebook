@@ -10,5 +10,5 @@ port = 5038
 #pass = Evelyn1928
 
 [phone]
-#nationalprefix = 0046
-#domesticprefix = 0155
+nationalprefix = 0046
+domesticprefix = 0155
